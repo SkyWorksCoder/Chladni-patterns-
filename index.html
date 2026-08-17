@@ -2,110 +2,52 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title></title>
-  <style>
-    body { margin: 0;  }
-    canvas { display: block; }
-  </style>
-<script src="https://cdn.jsdelivr.net/npm/dat.gui/build/dat.gui.min.js"></script>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
-<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
-    <script type="importmap">
-      {
-        "imports": {
-          "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
-          "three/examples/jsm/loaders/GLTFLoader.js": "https://unpkg.com/three@0.160.0/examples/jsm/loaders/GLTFLoader.js",
-          "three/examples/jsm/controls/OrbitControls.js": "https://unpkg.com/three@0.160.0/examples/jsm/controls/OrbitControls.js",
-          "three/examples/jsm/loaders/FontLoader.js": "https://unpkg.com/three@0.160.0/examples/jsm/loaders/FontLoader.js",
-          "three/examples/jsm/geometries/TextGeometry.js": "https://unpkg.com/three@0.160.0/examples/jsm/geometries/TextGeometry.js",
-          "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
-        }
-      }
-    </script>
-</head>
-<body>
-<div id="panel">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chladni Patterns 3D</title>
   
-<a id="ig-link" href="https://instagram.com/null_sky.dev" target="_blank">
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
-    <path d="M7 2C4.2 2 2 4.2 2 7v10c0 2.8 
-             2.2 5 5 5h10c2.8 0 5-2.2 
-             5-5V7c0-2.8-2.2-5-5-5H7zm5 
-             5a5 5 0 110 10 5 5 0 010-10zm6.5-1.5a1.5 
-             1.5 0 11-3 0 1.5 1.5 0 013 0z"/>
-  </svg>
-  <span> @null_sky.dev</span>
-</a>
-</div>
-</body>
-<style>
-#loading{
-color:black;
-
-//visibility:hidden;
-}
-#ig-link{
-z-index:9999;
-}
-/* KaTeX */
-    link[rel=stylesheet] {}
-
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      overflow: hidden;
+      background: #000;
+    }
+    canvas {
+      display: block;
+      width: 100vw;
+      height: 100vh;
+    }
+    #loading {
+      color: black;
+      /* visibility: hidden; */
+    }
     #panel {
       position: fixed;
-bottom: 50px;              /* distance from bottom (adjust as needed) */
-left: 50%;
-transform: translateX(-50%);
-z-index: 10;
-
-display: flex;
-flex-direction: column;
-gap: 8px;
-
-pointer-events: none;
-    }
-
-    #eq-box {
-      background: rgba(0,0,0,0.5);
-      border: 1px solid rgba(255,255,255,0.09);
-      border-radius: 10px;
-      padding: 12px 16px 14px;
-      backdrop-filter: blur(8px);
-    }
-
-    #eq-box .title {
-      font-family: 'Courier New', monospace;
-      font-size: 9px;
-      letter-spacing: 0.22em;
-      color: rgba(255,255,255,0.3);
-      text-transform: uppercase;
-      margin-bottom: 10px;
-    }
-
-    /* Make all KaTeX text white */
-    #eq-box .katex {
-      color: #ffffff;
-      font-size: 1em;
-    }
-
-    .eq-row {
-      margin: 5px 0;
+      bottom: 50px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 10;
       display: flex;
-      align-items: center;
+      flex-direction: column;
+      gap: 8px;
+      pointer-events: none;
     }
-
     #ig-link {
       pointer-events: all;
       display: flex;
       align-items: center;
       gap: 7px;
-      background: rgba(255,255,255,0.2);
-      border: 1px solid rgba(255,255,255,0.09);
+      background: rgba(255, 255, 255, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.09);
       border-radius: 10px;
       padding: 8px 13px;
       backdrop-filter: blur(8px);
       text-decoration: none;
       width: fit-content;
       transition: border-color 0.25s, background 0.25s;
+      z-index: 9999;
     }
     #ig-link:hover {
       border-color: rgba(220, 80, 120, 0.55);
@@ -120,310 +62,273 @@ pointer-events: none;
       font-family: 'Courier New', monospace;
       font-size: 11px;
       letter-spacing: 0.07em;
-      color: rgba(255,255,255,0.7);
+      color: rgba(255, 255, 255, 0.7);
       transition: color 0.25s;
     }
-    #ig-link:hover span { color: #ff6688; }
-</style>
+    #ig-link:hover span {
+      color: #ff6688;
+    }
+  </style>
+
+  <!-- External libraries -->
+  <script src="https://cdn.jsdelivr.net/npm/dat.gui/build/dat.gui.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+
+  <!-- Import Map for Three.js -->
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+        "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+      }
+    }
+  </script>
+</head>
+<body>
+  <div id="panel">
+    <a id="ig-link" href="https://instagram.com/null_sky.dev" target="_blank">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+        <path d="M7 2C4.2 2 2 4.2 2 7v10c0 2.8 
+                 2.2 5 5 5h10c2.8 0 5-2.2 
+                 5-5V7c0-2.8-2.2-5-5-5H7zm5 
+                 5a5 5 0 110 10 5 5 0 010-10zm6.5-1.5a1.5 
+                 1.5 0 11-3 0 1.5 1.5 0 013 0z"/>
+      </svg>
+      <span>@null_sky.dev</span>
+    </a>
+  </div>
+
   <script type="module">
-  
-const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-const oscillator = audioCtx.createOscillator();
-const gainNode = audioCtx.createGain();
-
-oscillator.type = 'sine';
-gainNode.gain.value = 0.7; // Volume at 70%
-
-oscillator.connect(gainNode);
-gainNode.connect(audioCtx.destination);
-
-let isAudioStarted = false;
-
-
-function playAudio(m, n) {
-
-  if (audioCtx.state === 'suspended') {
-    audioCtx.resume();
-  }
-
-  if (!isAudioStarted) {
-    oscillator.start();
-    isAudioStarted = true;
-  }
-
-  // Calculate target frequency from m and n
-  const targetFreq = 120 * Math.sqrt(m * m + n * n);
-
- oscillator.frequency.setTargetAtTime(targetFreq, audioCtx.currentTime, 0.05);
-}
-function resetParticles() {
-  const posArray = geometry.attributes.position.array;
-  for (let i = 0; i < posArray.length; i += 3) {
-    posArray[i]     = (Math.random() - 0.5) * 2; // x
-    posArray[i + 1] = (Math.random() - 0.5) * 2; // y
-    posArray[i + 2] = 0.01;                     // z
-  }
-  geometry.attributes.position.needsUpdate = true;
-}
-
-let controls={
-v1:6,
-v2:2
-}
-function Amp(x,y,m,n){
-return Math.cos(m*Math.PI*x)*Math.cos(n*Math.PI*y)-Math.cos(n*Math.PI*x)*Math.cos(m*Math.PI*y)
-}
-
-
-
-function map(value, start1, stop1, start2, stop2, withinBounds = false) {
-  let newValue = ((value - start1) / (stop1 - start1)) * (stop2 - start2) + start2;
-  if (!withinBounds) return newValue;
-  if (start2 < stop2) {
-    return Math.min(Math.max(newValue, start2), stop2);
-  } else {
-    return Math.min(Math.max(newValue, stop2), start2);
-  }
-}
-
-
-let gui=new dat.GUI
-gui.add(controls,"v1",1,8,1).name("m").onChange(()=>{
-playAudio(controls.v1,controls.v2)
-resetParticles()
-})
-gui.add(controls,"v2",1,8,1).name("n").onChange(()=>{
-playAudio(controls.v1,controls.v2)
-resetParticles()
-})
-
-
-
-
-
-
-function random(min=0, max) {
-  return Math.random() * (max - min) + min;
-}
-
     import * as THREE from 'three';
-    import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
-    import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-//import { AnimationMixer } from '';
-import { FontLoader } from 'three/examples/jsm/loaders/FontLoader.js';
-      import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry.js';
-import { AnimationMixer } from 'three';
-import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
-import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
-import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
-let cw=window.innerWidth
+    import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+    import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+    import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+    import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
 
-let ch=window.innerHeight
+    // --- Audio Synthesis Setup ---
+    let audioCtx = null;
+    let oscillator = null;
+    let gainNode = null;
+    let isAudioStarted = false;
 
-const scene=new THREE.Scene();
+    function initAudio() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        oscillator = audioCtx.createOscillator();
+        gainNode = audioCtx.createGain();
 
-const camera=new THREE.PerspectiveCamera(75,cw/ch,0.1,10000);
-camera.position.set(0, 2,3);
-//camera.position.set(8,5,8);
-scene.rotation.x = -Math.PI / 2; 
+        oscillator.type = 'sine';
+        gainNode.gain.value = 0.5;
 
-const renderer=new THREE.WebGLRenderer();
-document.body.appendChild(renderer.domElement)
-
-renderer.setSize(cw,ch)
-
-renderer.setPixelRatio(devicePixelRatio)
-
-renderer.shadowMap.enabled = true;
-renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-//renderer.toneMapping = THREE.NoToneMapping;
-// or try:
-//renderer.toneMapping = THREE.ACESFilmicToneMapping;
-//renderer.toneMappingExposure = 1.5;
-const orbitcontrols=new OrbitControls(camera,renderer.domElement)
-
-orbitcontrols.enableDamping=true
-
-
-orbitcontrols.dampingFactor=0.01
-
-
-
-var m=controls.v1
-var n=controls.v2
-var positions=[]
-var sc=1
-var colors=[1,0,0]
-for(let i=0;i<2000;i++){
-let x = (Math.random() - 0.5) * 2;
-  let y = (Math.random() - 0.5) * 2;
-  let z = 0.01
-positions.push(x,y,z)
-
-}
-
-
-
-
-
-const geometry = new THREE.BufferGeometry();
-const amplitudes = new Float32Array(2000); 
-geometry.setAttribute("position", new THREE.Float32BufferAttribute(positions, 3));
-
-geometry.setAttribute("amplitude", new THREE.BufferAttribute(amplitudes, 1));
-// Add a uniform for amplitude/vibration intensity or compute it per vertex
-const material = new THREE.ShaderMaterial({
-  transparent: true,
-  depthWrite: false,
-  blending: THREE.AdditiveBlending,
-  uniforms: {
-    colorNode: { value: new THREE.Color(0xffd700) }, // Gold/White at nodal line
-    colorVibe: { value: new THREE.Color(0x00f3ff) }  // Neon Cyan at high vibration
-  },
-  vertexShader: `
-    attribute float amplitude; // Passes |A| from JS
-    varying float vAmp;
-
-    void main() {
-      vAmp = amplitude;
-      
-      // Make particles slightly smaller at nodal lines for crispness
-      gl_PointSize = mix(2.5, 5.0, amplitude); 
-      gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+        oscillator.connect(gainNode);
+        gainNode.connect(audioCtx.destination);
+      }
     }
-  `,
-  fragmentShader: `
-    uniform vec3 colorNode;
-    uniform vec3 colorVibe;
-    varying float vAmp;
 
-    void main() {
-      vec2 c = gl_PointCoord - vec2(0.5);
-      float d = length(c);
-      float alpha = exp(-10.0 * d * d);
+    function playAudio(m, n) {
+      initAudio();
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
 
-      // Interpolate smoothly between Neon Cyan (high vibe) and Gold (nodal line)
-      vec3 finalColor = mix(colorNode, colorVibe, clamp(vAmp, 0.0, 1.0));
+      if (!isAudioStarted) {
+        oscillator.start();
+        isAudioStarted = true;
+      }
 
-      gl_FragColor = vec4(finalColor, alpha);
+      const targetFreq = 120 * Math.sqrt(m * m + n * n);
+      oscillator.frequency.setTargetAtTime(targetFreq, audioCtx.currentTime, 0.05);
     }
-  `
-});
 
-//material.toneMapped = false;
-const points = new THREE.Points(geometry, material)
-geometry.attributes.position.needsUpdate = true;
-//points.scale.set(10,10,10);
-scene.add(points);
+    // --- Chladni Mathematics ---
+    function Amp(x, y, m, n) {
+      return Math.cos(m * Math.PI * x) * Math.cos(n * Math.PI * y) - 
+             Math.cos(n * Math.PI * x) * Math.cos(m * Math.PI * y);
+    }
 
-// A sleek, semi-transparent metallic/glass plate under the sand
-const plateGeo = new THREE.PlaneGeometry(2, 2);
-const plateMat = new THREE.MeshStandardMaterial({
-  color: 0x0a0a0f,  // Dark slate/black
-  roughness: 0.85,  // Matte finish (eliminates shiny mirror reflection)
-  metalness: 0.1,   // Low metallic glare
-  side: THREE.DoubleSide
-});
+    // --- Three.js Scene Setup ---
+    let cw = window.innerWidth;
+    let ch = window.innerHeight;
 
-const plate = new THREE.Mesh(plateGeo, plateMat);
-plate.position.z = -0.01; // Just behind particles
-scene.add(plate);
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, cw / ch, 0.1, 1000);
+    camera.position.set(0, 2, 3);
+    scene.rotation.x = -Math.PI / 2;
 
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setSize(cw, ch);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    document.body.appendChild(renderer.domElement);
 
+    const orbitcontrols = new OrbitControls(camera, renderer.domElement);
+    orbitcontrols.enableDamping = true;
+    orbitcontrols.dampingFactor = 0.05;
 
- // Soft fill light
-const ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
-scene.add(ambientLight);
+    // --- Particles & Geometry ---
+    const particleCount = 2000;
+    const positions = [];
+    for (let i = 0; i < particleCount; i++) {
+      positions.push((Math.random() - 0.5) * 2, (Math.random() - 0.5) * 2, 0.01);
+    }
 
-// Angled directional light to accentuate depth without a center hotspot
-const dirLight = new THREE.DirectionalLight(0xffffff, 1.2);
-dirLight.position.set(5, 5, 5); 
-scene.add(dirLight);
+    const geometry = new THREE.BufferGeometry();
+    const amplitudes = new Float32Array(particleCount);
+    geometry.setAttribute("position", new THREE.Float32BufferAttribute(positions, 3));
+    geometry.setAttribute("amplitude", new THREE.BufferAttribute(amplitudes, 1));
 
-  
+    const material = new THREE.ShaderMaterial({
+      transparent: true,
+      depthWrite: false,
+      blending: THREE.AdditiveBlending,
+      uniforms: {
+        colorNode: { value: new THREE.Color(0xffd700) },
+        colorVibe: { value: new THREE.Color(0x00f3ff) }
+      },
+      vertexShader: `
+        attribute float amplitude;
+        varying float vAmp;
 
-  const pointLight = new THREE.PointLight(0xff4444, 3, 10);
-  pointLight.position.set(0, 0, 1);
-  scene.add(pointLight);
-//scene.add(hemiLight);
-// For Directional Light:
-dirLight.castShadow = true;
-dirLight.shadow.mapSize.width = 1024;
-dirLight.shadow.mapSize.height = 1024;
+        void main() {
+          vAmp = amplitude;
+          gl_PointSize = mix(2.5, 5.0, amplitude); 
+          gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+        }
+      `,
+      fragmentShader: `
+        uniform vec3 colorNode;
+        uniform vec3 colorVibe;
+        varying float vAmp;
 
-// For Point Light:
-pointLight.castShadow = true;
+        void main() {
+          vec2 c = gl_PointCoord - vec2(0.5);
+          float d = length(c);
+          float alpha = exp(-10.0 * d * d);
+          vec3 finalColor = mix(colorNode, colorVibe, clamp(vAmp, 0.0, 1.0));
+          gl_FragColor = vec4(finalColor, alpha);
+        }
+      `
+    });
 
-// For Plate Mesh:
-plate.receiveShadow = true;
+    const points = new THREE.Points(geometry, material);
+    scene.add(points);
 
-// For Particle System:
-points.castShadow = true;
+    // --- Base Plate ---
+    const plateGeo = new THREE.PlaneGeometry(2, 2);
+    const plateMat = new THREE.MeshStandardMaterial({
+      color: 0x0a0a0f,
+      roughness: 0.85,
+      metalness: 0.1,
+      side: THREE.DoubleSide
+    });
+    const plate = new THREE.Mesh(plateGeo, plateMat);
+    plate.position.z = -0.01;
+    scene.add(plate);
 
-const composer = new EffectComposer(renderer);
-composer.addPass(new RenderPass(scene, camera));
+    // --- Lighting ---
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
+    scene.add(ambientLight);
 
-const bloomPass = new UnrealBloomPass(
-    new THREE.Vector2(window.innerWidth, window.innerHeight),
-   1.2, // strength
-    .4, // radius
-    0.25// threshold
-);
-composer.addPass(bloomPass);
+    const dirLight = new THREE.DirectionalLight(0xffffff, 1.2);
+    dirLight.position.set(5, 5, 5);
+    scene.add(dirLight);
 
-//scene.add(new THREE.GridHelper(100,200,20))
-//scene.add(new THREE.AxesHelper(100,100,100))
+    const pointLight = new THREE.PointLight(0xff4444, 3, 10);
+    pointLight.position.set(0, 0, 1);
+    scene.add(pointLight);
 
-//orbitcontrols.enabled=false
-const clock = new THREE.Clock();
+    // --- Postprocessing (Bloom) ---
+    const composer = new EffectComposer(renderer);
+    composer.addPass(new RenderPass(scene, camera));
 
-var h=0.001
-function animate() {
-  requestAnimationFrame(animate)
-  orbitcontrols.update()
-//  scene.rotation.y+=0.005
-const posArray = geometry.attributes.position.array;
-const ampArray= geometry.attributes.amplitude.array
-// in animate():
-for (let i = 0; i < posArray.length; i += 3) {
-  let px = posArray[i];
-  let py = posArray[i + 1];
-//absA is zero when its in nodal line so no vibration  
-  let absA=Math.abs(Amp(px,py,m,n))
-//  let pz = posArray[i + 2];
+    const bloomPass = new UnrealBloomPass(
+      new THREE.Vector2(window.innerWidth, window.innerHeight),
+      1.2,
+      0.4,
+      0.25
+    );
+    composer.addPass(bloomPass);
 
-//below this are partial derivatives finite differences :]
-let gradX=(Math.abs(Amp(px+h,py,m,n))-Math.abs(Amp(px-h,py,m,n)))/(2*h)
+    // --- Controls & GUI ---
+    const controls = {
+      v1: 6,
+      v2: 2
+    };
 
-let gradY=(Math.abs(Amp(px,py+h,m,n))-Math.abs(Amp(px,py-h,m,n)))/(2*h)
+    function resetParticles() {
+      const posArray = geometry.attributes.position.array;
+      for (let i = 0; i < posArray.length; i += 3) {
+        posArray[i]     = (Math.random() - 0.5) * 2;
+        posArray[i + 1] = (Math.random() - 0.5) * 2;
+        posArray[i + 2] = 0.01;
+      }
+      geometry.attributes.position.needsUpdate = true;
+    }
 
-const driftX = -gradX * absA * 0.0005; 
-const driftY = -gradY * absA * 0.0005;
+    const gui = new dat.GUI();
+    gui.add(controls, "v1", 1, 8, 1).name("m").onChange(() => {
+      playAudio(controls.v1, controls.v2);
+      resetParticles();
+    });
+    gui.add(controls, "v2", 1, 8, 1).name("n").onChange(() => {
+      playAudio(controls.v1, controls.v2);
+      resetParticles();
+    });
 
-const jitterX = (Math.random() - 0.5) * absA * 0.02;
-const jitterY = (Math.random() - 0.5) * absA * 0.02;
+    // --- Animation Loop ---
+    const h = 0.001;
+    function animate() {
+      requestAnimationFrame(animate);
+      orbitcontrols.update();
 
-let pIdx = i / 3;
-  ampArray[pIdx] = absA; 
-const newX = px + driftX + jitterX;
-const newY = py + driftY + jitterY;
- posArray[i]     = newX
- posArray[i + 1] = newY
-//  posArray[i + 2] = pz + dz * dt;
-}
+      const posArray = geometry.attributes.position.array;
+      const ampArray = geometry.attributes.amplitude.array;
+      const m = controls.v1;
+      const n = controls.v2;
 
-  geometry.attributes.position.needsUpdate = true;  
-  geometry.attributes.amplitude.needsUpdate = true;  
-//geometry.setDrawRange(0, positions.length / 3);
+      for (let i = 0; i < posArray.length; i += 3) {
+        let px = posArray[i];
+        let py = posArray[i + 1];
 
- //  bloomPass.strength=controls.val
-//renderer.render(scene, camera);
-  composer.render()
- m=controls.v1
- n=controls.v2 
-}
+        let absA = Math.abs(Amp(px, py, m, n));
 
-animate();
-playAudio(m,n)
-</script>
+        let gradX = (Math.abs(Amp(px + h, py, m, n)) - Math.abs(Amp(px - h, py, m, n))) / (2 * h);
+        let gradY = (Math.abs(Amp(px, py + h, m, n)) - Math.abs(Amp(px, py - h, m, n))) / (2 * h);
+
+        const driftX = -gradX * absA * 0.0005;
+        const driftY = -gradY * absA * 0.0005;
+        const jitterX = (Math.random() - 0.5) * absA * 0.02;
+        const jitterY = (Math.random() - 0.5) * absA * 0.02;
+
+        ampArray[i / 3] = absA;
+        posArray[i]     = px + driftX + jitterX;
+        posArray[i + 1] = py + driftY + jitterY;
+      }
+
+      geometry.attributes.position.needsUpdate = true;
+      geometry.attributes.amplitude.needsUpdate = true;
+
+      composer.render();
+    }
+
+    animate();
+
+    // Start audio on first user interaction to comply with browser policies
+    window.addEventListener('pointerdown', () => {
+      playAudio(controls.v1, controls.v2);
+    }, { once: true });
+
+    // Handle Window Resize
+    window.addEventListener('resize', () => {
+      cw = window.innerWidth;
+      ch = window.innerHeight;
+      camera.aspect = cw / ch;
+      camera.updateProjectionMatrix();
+      renderer.setSize(cw, ch);
+      composer.setSize(cw, ch);
+    });
+  </script>
+</body>
 </html>
